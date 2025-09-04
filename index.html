@@ -2,129 +2,140 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>🎂 Happy Birthday 🎉</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form to Google Sheets</title>
   <style>
-    /* Apply a vibrant, glossy gradient background */
     body {
+      font-family: Arial, sans-serif;
+      background: #f4f7f8;
+      color: #333;
       margin: 0;
       padding: 0;
-      height: 100vh;
-      font-family: 'Comic Sans MS', cursive, sans-serif;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: 50px auto;
+      background: #fff;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    h2 {
       text-align: center;
+      color: #444;
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 8px;
+      margin-top: 15px;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+      transition: 0.2s;
+    }
+
+    input:focus, textarea:focus {
+      border-color: #007BFF;
+      outline: none;
+      box-shadow: 0 0 6px rgba(0,123,255,0.3);
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      background: #007BFF;
+      border: none;
+      border-radius: 8px;
       color: white;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      /*background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 25%, #fad0c4 50%, #fbc2eb 75%, #a18cd1 100%);*/
-	background: linear-gradient(125deg, #ff000a 25%, #d40099 25%, #d40099 25%, #ff3900 25%, #f1d205 100%);
-      background-size: 300% 300%;
-      animation: glossyBG 5s ease infinite;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
     }
 
-    @keyframes glossyBG {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+    button:hover {
+      background: #0056b3;
     }
 
-    h1 {
-      font-size: 4rem;
-      margin: 0;
-      animation: pop 1s ease-in-out infinite alternate;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    }
-
-    @keyframes pop {
-      from { transform: scale(1); }
-      to { transform: scale(1.05); }
-    }
-
-    .countdown {
-      font-size: 4rem;
-      margin-top: 20px;
-      color: #fff;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-    }
-
-    .balloons {
-      font-size: 4rem;
-      animation: float 3s ease-in-out infinite alternate;
-    }
-
-    @keyframes float {
-      from { transform: translateY(0); }
-      to { transform: translateY(-20px); }
-    }
-
-    .hidden {
+    .success, .error {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 14px;
       display: none;
     }
 
-    p {
-      font-size: 3rem;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-	  text-align:center;
+    .success {
+      color: green;
     }
-	.friend-photo {
-	  width: 200px;
-	  height: 200px;
-	  object-fit: cover;
-	  border-radius: 50%;
-	  border: 5px solid #fff;
-	  box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
-	  margin: 20px auto;
-	  animation: fadeIn 2s ease-in-out;
-	}
 
+    .error {
+      color: red;
+    }
   </style>
 </head>
 <body>
-  <!--div id="beforeBirthday" class="hidden">
-    <div class="countdown">⏳ Countdown to your special moment...</div>
-    <div id="timer" class="countdown"></div>
-  </div-->
 
-  <div id="birthdayMessage" >
-    <div class="balloons">🎈🎉🎊</div>
-    <h1>Happy Birthday, Sangram! 🎂🎉</h1>
-    <p>
-	Many many happy returns of the day! 🎈<br><br>
-	Wishing you a year full of success, good health, and joyful moments. 🌟<br><br><br>
-	— Warm wishes from <strong>Samrat </strong>
-</p>
-    <div class="balloons">🎊🎉🎈</div>
+  <div class="container">
+    <h2>Contact Form</h2>
+    <form id="myForm">
+      <label for="name">Name</label>
+      <input type="text" id="name" name="name" placeholder="Enter your name" required>
+
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" placeholder="Enter your email" required>
+
+      <label for="message">Message</label>
+      <textarea id="message" name="message" rows="4" placeholder="Write your message"></textarea>
+
+      <button type="submit">Submit</button>
+    </form>
+    <p class="success">✅ Form submitted successfully!</p>
+    <p class="error">❌ Something went wrong. Try again.</p>
   </div>
 
   <script>
-   /* 🎯 Set your desired date and time here:
-	const birthdayTime = new Date("2025-08-01T21:00:00"); // 1st August 2025, 12:00 AM
+    const scriptURL = "https://script.google.com/macros/s/AKfycbzhyYb1o-bA_TZfsMeOtRuubJLoUCqiAonAM9Uh6QzrkGYtKSXVYrP2v7UUiszEbhCJ/exec"; // Replace with your Apps Script URL
 
-	const timer = document.getElementById("timer");
-	const before = document.getElementById("beforeBirthday");
-	const message = document.getElementById("birthdayMessage");
+    const form = document.getElementById("myForm");
+    const successMsg = document.querySelector(".success");
+    const errorMsg = document.querySelector(".error");
 
-	function updateCountdown() {
-	  const now = new Date().getTime();
-	  const distance = birthdayTime.getTime() - now;
+    form.addEventListener("submit", e => {
+      e.preventDefault();
 
-	  if (distance <= 0) {
-		before.classList.add("hidden");
-		message.classList.remove("hidden");
-		return;
-	  }
+      const formData = {
+        name: form.name.value,
+        email: form.email.value,
+        message: form.message.value
+      };
 
-	  const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-	  const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-	  const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-	  timer.innerHTML = `${hours}h ${minutes}m ${seconds}s`;
-	}
-
-	updateCountdown();
-	setInterval(updateCountdown, 1000);*/
-
+      fetch(scriptURL, {
+        method: "POST",
+        body: JSON.stringify(formData)
+      })
+      .then(res => res.json())
+      .then(data => {
+        successMsg.style.display = "block";
+        errorMsg.style.display = "none";
+        form.reset();
+      })
+      .catch(err => {
+        successMsg.style.display = "none";
+        errorMsg.style.display = "block";
+        console.error("Error:", err);
+      });
+    });
   </script>
+
 </body>
 </html>
-
