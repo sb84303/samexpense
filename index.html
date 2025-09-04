@@ -3,18 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Form to Google Sheets</title>
+  <title>Date-wise Expense Manager</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f4f7f8;
+      background: #f7f9fc;
       color: #333;
       margin: 0;
       padding: 0;
     }
 
     .container {
-      max-width: 500px;
+      max-width: 600px;
       margin: 50px auto;
       background: #fff;
       border-radius: 12px;
@@ -35,7 +35,7 @@
       margin-top: 15px;
     }
 
-    input, textarea {
+    input, textarea, select {
       width: 100%;
       padding: 12px;
       margin-bottom: 10px;
@@ -45,16 +45,16 @@
       transition: 0.2s;
     }
 
-    input:focus, textarea:focus {
-      border-color: #007BFF;
+    input:focus, textarea:focus, select:focus {
+      border-color: #28a745;
       outline: none;
-      box-shadow: 0 0 6px rgba(0,123,255,0.3);
+      box-shadow: 0 0 6px rgba(40,167,69,0.3);
     }
 
     button {
       width: 100%;
       padding: 14px;
-      background: #007BFF;
+      background: #28a745;
       border: none;
       border-radius: 8px;
       color: white;
@@ -64,7 +64,7 @@
     }
 
     button:hover {
-      background: #0056b3;
+      background: #218838;
     }
 
     .success, .error {
@@ -86,56 +86,81 @@
 <body>
 
   <div class="container">
-    <h2>Contact Form</h2>
-    <form id="myForm">
-      <label for="name">Name</label>
-      <input type="text" id="name" name="name" placeholder="Enter your name" required>
+    <h2>Expense Manager</h2>
+    <form id="expenseForm">
+      <label for="date">Date</label>
+      <input type="date" id="date" name="date" required>
 
-      <label for="email">Email</label>
-      <input type="email" id="email" name="email" placeholder="Enter your email" required>
+      <label for="category">Category</label>
+      <select id="category" name="category" required>
+        <option value="">-- Select Category --</option>
+        <option value="Food">Food</option>
+        <option value="Travel">Travel</option>
+        <option value="Shopping">Shopping</option>
+        <option value="Bills">Bills</option>
+        <option value="Others">Others</option>
+      </select>
 
-      <label for="message">Message</label>
-      <textarea id="message" name="message" rows="4" placeholder="Write your message"></textarea>
+      <label for="description">Description</label>
+      <textarea id="description" name="description" rows="3" placeholder="Enter details"></textarea>
 
-      <button type="submit">Submit</button>
+      <label for="amount">Amount (₹)</label>
+      <input type="text" id="amount" name="amount" placeholder="Enter amount" required oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+
+      <button type="submit">Add Expense</button>
     </form>
-    <p class="success">✅ Form submitted successfully!</p>
+    <p class="success">✅ Expense added successfully!</p>
     <p class="error">❌ Something went wrong. Try again.</p>
   </div>
 
-  <script>
-    const scriptURL = "https://script.google.com/macros/s/AKfycbzhyYb1o-bA_TZfsMeOtRuubJLoUCqiAonAM9Uh6QzrkGYtKSXVYrP2v7UUiszEbhCJ/exec"; // Replace with your Apps Script URL
+	<script>
+	  const scriptURL = "https://script.google.com/macros/s/AKfycbxDKYXKMzYHVh0RbmXHNT-3oZ_pocpm0mAdGHBMy85NSRWkbIrFAP3X3CjmhQLzLe4p/exec"; // Replace with your Apps Script URL
 
-    const form = document.getElementById("myForm");
-    const successMsg = document.querySelector(".success");
-    const errorMsg = document.querySelector(".error");
+	  const form = document.getElementById("expenseForm");
+	  const successMsg = document.querySelector(".success");
+	  const errorMsg = document.querySelector(".error");
+	  const submitBtn = form.querySelector("button");
 
-    form.addEventListener("submit", e => {
-      e.preventDefault();
+	  form.addEventListener("submit", e => {
+		e.preventDefault();
 
-      const formData = {
-        name: form.name.value,
-        email: form.email.value,
-        message: form.message.value
-      };
+		// Disable button
+		submitBtn.disabled = true;
+		submitBtn.textContent = "Submitting...";
 
-      fetch(scriptURL, {
-        method: "POST",
-        body: JSON.stringify(formData)
-      })
-      .then(res => res.json())
-      .then(data => {
-        successMsg.style.display = "block";
-        errorMsg.style.display = "none";
-        form.reset();
-      })
-      .catch(err => {
-        successMsg.style.display = "none";
-        errorMsg.style.display = "block";
-        console.error("Error:", err);
-      });
-    });
-  </script>
+		const formData = {
+		  date: form.date.value,
+		  category: form.category.value,
+		  description: form.description.value,
+		  amount: form.amount.value
+		};
+
+		fetch(scriptURL, {
+		  method: "POST",
+		  body: JSON.stringify(formData)
+		})
+		.then(res => res.json())
+		.then(data => {
+		  successMsg.style.display = "block";
+		  errorMsg.style.display = "none";
+		  form.reset();
+
+		  // Re-enable button
+		  submitBtn.disabled = false;
+		  submitBtn.textContent = "Add Expense";
+		})
+		.catch(err => {
+		  successMsg.style.display = "none";
+		  errorMsg.style.display = "block";
+		  console.error("Error:", err);
+
+		  // Re-enable button
+		  submitBtn.disabled = false;
+		  submitBtn.textContent = "Add Expense";
+		});
+	  });
+	</script>
+
 
 </body>
 </html>
