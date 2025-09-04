@@ -53,7 +53,7 @@
       <label>Description</label>
       <textarea name="description" rows="3"></textarea>
       <label>Amount (₹)</label>
-      <input type="number" name="amount" required>
+      <input type="text" name="amount" required oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
       <button type="submit">Add Expense</button>
     </form>
     <p class="success">✅ Expense added successfully!</p>
@@ -117,3 +117,4 @@
   </script>
 </body>
 </html>
+
